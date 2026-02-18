@@ -6,6 +6,18 @@ const path = require('path');
 const app = new Koa();
 const router = new Router();
 
+// Middleware для CORS
+app.use(async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type');
+  if (ctx.method === 'OPTIONS') {
+    ctx.status = 204;
+    return;
+  }
+  await next();
+});
+
 // Middleware для эмуляции медленного соединения
 const slowMiddleware = async (ctx, next) => {
   if (ctx.path.includes('/api/news')) {
